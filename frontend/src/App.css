@@ -1,0 +1,16 @@
+/* Estilos personalizados para la aplicación */
+.gradient-overlay {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%);
+}
+
+/* Efecto para la imagen de fondo */
+.image-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.3) 0%, rgba(37, 99, 235, 0.3) 100%);
+  border-radius: 0.5rem;
+}
