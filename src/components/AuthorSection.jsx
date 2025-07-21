@@ -50,21 +50,22 @@ function AuthorSection() {
 
           {/* Imagen del autor - DERECHA */}
           <div className="lg:w-5/12">
-            <div className="relative h-96 bg-gradient-to-br from-gray-400 to-gray-600 rounded-lg shadow-xl overflow-hidden mr-6">
-              {/* Simulación de imagen del autor */}
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-500/60 to-gray-700/60"></div>
+            <div className="relative h-96 rounded-lg shadow-xl overflow-hidden mr-6">
+              <img
+                src="/Zeller.jpg"
+                alt="Dr. Maximiliano Zeller Echenique"
+                className="w-full h-full object-cover"
+              />
               
-              {/* Placeholder para foto del autor */}
-              <div className="relative h-full flex items-center justify-center text-white">
-                <div className="text-center px-6">
-                  <div className="w-24 h-24 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <span className="text-4xl">👨‍🎓</span>
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">Dr. Maximiliano</h3>
-                  <h3 className="text-xl font-semibold mb-2">Zeller Echenique</h3>
-                  <p className="text-sm opacity-90">Profesor y Doctor en Filosofía</p>
-                  <p className="text-sm opacity-90">Universidad de Buenos Aires</p>
-                </div>
+              {/* Overlay con información */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              
+              {/* Información superpuesta */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <h3 className="text-xl font-semibold mb-1">Dr. Maximiliano</h3>
+                <h3 className="text-xl font-semibold mb-2">Zeller Echenique</h3>
+                <p className="text-sm opacity-90">Profesor y Doctor en Filosofía</p>
+                <p className="text-sm opacity-90">Universidad de Buenos Aires</p>
               </div>
             </div>
           </div>

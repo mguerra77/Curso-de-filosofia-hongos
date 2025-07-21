@@ -6,8 +6,8 @@ function MainContent() {
           {/* Imagen de referencia */}
           <div className="w-full lg:w-5/12">
             <img
-              src="/src/assets/curso-hongos.jpg"
-              alt="Descripción de la imagen"
+              src="/curso-hongos.jpg"
+              alt="La filosofía secreta de los hongos - Curso de introducción"
               className="w-full h-80 object-cover rounded-lg shadow-xl"
             />
           </div>     
