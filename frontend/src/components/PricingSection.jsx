@@ -14,7 +14,7 @@ function PricingSection() {
                 Estudiante de Argentina
               </h3>
               <div className="text-4xl font-bold text-emerald-600 mb-2">
-                $30.000,00
+                $50.000,00
               </div>
               <p className="text-emerald-700 text-sm">
                 Pesos Argentinos
@@ -27,10 +27,10 @@ function PricingSection() {
                 Estudiante Extranjero
               </h3>
               <div className="text-4xl font-bold text-teal-600 mb-2">
-                $40.000,00
+                $50USD
               </div>
               <p className="text-teal-700 text-sm">
-                Pesos Argentinos
+                Dólares Estadounidenses
               </p>
             </div>
           </div>
