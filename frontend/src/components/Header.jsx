@@ -1,16 +1,57 @@
 import { Link } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
 function Header() {
+  const { isAuthenticated, user, logout } = useAuth()
+
+  const handleLogout = () => {
+    logout()
+  }
+
   return (
     <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-20 text-center relative">
-      {/* Login button */}
-      <div className="absolute top-4 right-4">
+      {/* Saludo personalizado para usuarios autenticados */}
+      {isAuthenticated && user && (
+        <div className="absolute top-4 left-4 text-white text-sm font-medium">
+          👋 ¡Hola, {user.nombre || 'Usuario'}!
+        </div>
+      )}
+      
+      {/* Navigation buttons */}
+      <div className="absolute top-4 right-4 flex space-x-2">
         <Link 
-          to="/login"
+          to="/course"
           className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium"
         >
-          🔑 Iniciar Sesión
+          📚 Mi Curso
         </Link>
+        
+        {/* Mostrar botón Admin solo si es admin autenticado */}
+        {isAuthenticated && user?.rol === 'admin' && (
+          <Link 
+            to="/admin"
+            className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium"
+          >
+            🔧 Admin
+          </Link>
+        )}
+        
+        {/* Botón de autenticación */}
+        {isAuthenticated ? (
+          <button
+            onClick={handleLogout}
+            className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium"
+          >
+            🚪 Cerrar Sesión
+          </button>
+        ) : (
+          <Link 
+            to="/login"
+            className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium"
+          >
+            🔑 Iniciar Sesión
+          </Link>
+        )}
       </div>
       
       <div className="max-w-4xl mx-auto px-8">

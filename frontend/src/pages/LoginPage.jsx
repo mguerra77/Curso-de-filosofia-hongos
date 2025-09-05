@@ -1,8 +1,13 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
 function LoginPage() {
+  const navigate = useNavigate()
+  const { login, register } = useAuth()
   const [isLogin, setIsLogin] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -17,23 +22,52 @@ function LoginPage() {
       ...prev,
       [name]: value
     }))
+    // Limpiar error cuando el usuario empiece a escribir
+    if (error) setError('')
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (isLogin) {
-      // Lógica de login
-      console.log('Login:', { email: formData.email, password: formData.password })
-      alert('¡Login exitoso! Redirigiendo al curso...')
-    } else {
-      // Lógica de registro
-      if (formData.password !== formData.confirmPassword) {
-        alert('Las contraseñas no coinciden')
-        return
+    setLoading(true)
+    setError('')
+
+    try {
+      if (isLogin) {
+        // Lógica de login
+        await login({
+          email: formData.email,
+          password: formData.password
+        })
+        
+        // Después del login exitoso, siempre redirigir a la página principal
+        navigate('/')
+      } else {
+        // Lógica de registro
+        if (formData.password !== formData.confirmPassword) {
+          setError('Las contraseñas no coinciden')
+          setLoading(false)
+          return
+        }
+        
+        await register({
+          email: formData.email,
+          password: formData.password,
+          nombre: formData.nombre,
+          apellido: formData.apellido
+        })
+        
+        // Redirigir a la página de confirmación de email
+        navigate('/confirm-email', { 
+          state: { 
+            message: '¡Registro exitoso! Revisa tu email para confirmar tu cuenta.',
+            email: formData.email 
+          } 
+        })
       }
-      console.log('Registro:', formData)
-      alert('¡Registro exitoso! Ahora puedes iniciar sesión.')
-      setIsLogin(true)
+    } catch (err) {
+      setError(err.message || 'Ha ocurrido un error. Intenta nuevamente.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -70,6 +104,13 @@ function LoginPage() {
 
         {/* Formulario */}
         <div className="bg-white rounded-xl shadow-lg p-8">
+          {/* Mensaje de error */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+              {error}
+            </div>
+          )}
+          
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div className="grid grid-cols-2 gap-4">
@@ -138,9 +179,17 @@ function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 mt-6"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 mt-6"
             >
-              {isLogin ? '🔑 Iniciar Sesión' : '📝 Crear Cuenta'}
+              {loading ? (
+                <span className="flex items-center justify-center">
+                  <span className="animate-spin mr-2">⏳</span>
+                  {isLogin ? 'Iniciando sesión...' : 'Creando cuenta...'}
+                </span>
+              ) : (
+                isLogin ? '🔑 Iniciar Sesión' : '📝 Crear Cuenta'
+              )}
             </button>
           </form>
 
@@ -159,18 +208,24 @@ function LoginPage() {
 
           {isLogin && (
             <div className="mt-4 text-center">
-              <a href="#" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+              <Link to="/forgot-password" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
                 ¿Olvidaste tu contraseña?
-              </a>
+              </Link>
             </div>
           )}
         </div>
 
-        {/* Demo de acceso rápido */}
-        <div className="mt-6 bg-white/50 rounded-lg p-4 text-center">
-          <p className="text-sm text-gray-600 mb-2">Para demo, usa:</p>
-          <p className="text-xs text-gray-500">
-            Email: demo@hongos.com | Contraseña: demo123
+
+        {/* Advertencia de soporte */}
+        <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+          <p className="text-sm text-blue-800">
+            ¿Problemas? Comunícate con nosotros: 
+            <a 
+              href="mailto:espaciothaumazein@gmail.com" 
+              className="font-medium text-blue-600 hover:text-blue-700 ml-1 transition-colors"
+            >
+              espaciothaumazein@gmail.com
+            </a>
           </p>
         </div>
       </div>

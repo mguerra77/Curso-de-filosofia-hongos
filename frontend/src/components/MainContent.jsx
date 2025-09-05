@@ -1,6 +1,6 @@
 function MainContent() {
   return (
-    <div className="w-full bg-gray-50 py-16 px-4 sm:py-24">
+    <div className="w-full bg-gradient-to-br from-slate-200 via-gray-200 to-zinc-200 py-16 px-4 sm:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-20">
           {/* Imagen de referencia */}

@@ -12,6 +12,51 @@ dist
 dist-ssr
 *.local
 
+# Environment variables - CRÍTICO: No subir archivos con credenciales
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+frontend/.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Base de datos local
+*.db
+*.sqlite3
+backend/data/*.db
+
+# Virtual environment
+venv/
+.venv/
+env/
+.env/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +67,23 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Archivos de respaldo
+*.bak
+*.backup
+*~
+
+# Archivos de sistema
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Archivos de upload que pueden contener info personal
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Certificados y llaves
+*.pem
+*.key
+*.crt
+*.p12

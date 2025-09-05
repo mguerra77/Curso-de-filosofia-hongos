@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 function PricingSection() {
   return (
-    <div className="w-full bg-white py-20">
+    <div className="w-full bg-gradient-to-br from-slate-50 via-emerald-50 to-teal-50 py-20">
       <div className="max-w-6xl mx-auto px-12">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-800 mb-8">ARANCEL</h2>

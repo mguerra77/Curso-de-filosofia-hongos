@@ -1,7 +1,12 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+import Footer from '../components/Footer'
 
 function CheckoutPage() {
+  const { isAuthenticated, user } = useAuth()
+  const navigate = useNavigate()
+  
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -11,6 +16,26 @@ function CheckoutPage() {
     documento: '',
     metodoPago: 'cbu'
   })
+  // const [loading, setLoading] = useState(false) // No necesario sin Mercado Pago
+
+  // Verificar autenticación y redirigir si no está logueado
+  useEffect(() => {
+    if (!isAuthenticated) {
+      alert('Debes iniciar sesión para acceder al checkout')
+      navigate('/login')
+      return
+    }
+    
+    // Si está logueado, precargar algunos datos del usuario
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        nombre: user.nombre || '',
+        apellido: user.apellido || '',
+        email: user.email || ''
+      }))
+    }
+  }, [isAuthenticated, user, navigate])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -20,25 +45,88 @@ function CheckoutPage() {
     }))
   }
 
+  // Función de Mercado Pago comentada temporalmente por temas de permisos
+  /*
+  const handleMercadoPagoPayment = async () => {
+    setLoading(true)
+    try {
+      const token = localStorage.getItem('authToken')
+      if (!token) {
+        alert('Debes iniciar sesión para continuar')
+        return
+      }
+
+      const response = await fetch('http://localhost:5000/api/payments/create-preference', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...formData,
+          amount: formData.pais === 'Argentina' ? 50000 : 50
+        })
+      })
+
+      const data = await response.json()
+      
+      if (data.preference_id && data.init_point) {
+        // Redirigir al checkout de Mercado Pago
+        window.location.href = data.init_point
+      } else {
+        alert('Error al crear el pago: ' + (data.error || 'Error desconocido'))
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Error al procesar el pago con Mercado Pago')
+    } finally {
+      setLoading(false)
+    }
+  }
+  */
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Aquí iría la lógica de procesamiento del pago
+    
+    // Solo CBU por ahora - Mercado Pago temporalmente deshabilitado
     console.log('Datos del formulario:', formData)
-    alert('¡Compra procesada! Serás redirigido al curso.')
+    alert(`¡Datos registrados!\n\n📋 PASOS A SEGUIR:\n1. Transferir $${precio} ${formData.pais === 'Argentina' ? 'ARS' : 'USD'} a:\n   • CBU: 0123456789012345678901\n   • Alias: CURSO.HONGOS\n   • Titular: Maximiliano Zeller\n\n2. Enviar comprobante de pago a:\n   📧 espaciothaumazein@gmail.com\n   ✏️ Incluir: ${formData.nombre} ${formData.apellido}\n\n¡Te activaremos el acceso en menos de 24 horas!`)
   }
 
-  const precio = formData.pais === 'Argentina' ? '30.000' : '40.000'
+  const precio = formData.pais === 'Argentina' ? '50000' : '50'
+
+  // Si no está autenticado, mostrar mensaje de carga mientras redirige
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🔒</div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Acceso Restringido</h2>
+          <p className="text-gray-600">Redirigiendo al login...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header simple */}
       <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-8">
-        <div className="max-w-4xl mx-auto px-8 text-center">
-          <Link to="/" className="inline-block mb-4 text-emerald-100 hover:text-white transition-colors">
-            ← Volver al inicio
-          </Link>
-          <h1 className="text-3xl font-bold">Finalizar Compra</h1>
-          <p className="text-emerald-100 mt-2">Completa tus datos para acceder al curso</p>
+        <div className="max-w-4xl mx-auto px-8">
+          <div className="flex items-center justify-between mb-4">
+            <Link to="/" className="text-emerald-100 hover:text-white transition-colors">
+              ← Volver al inicio
+            </Link>
+            <Link to="/login" className="text-emerald-100 hover:text-white transition-colors">
+              Mi Cuenta
+            </Link>
+          </div>
+          <div className="text-center">
+            <h1 className="text-3xl font-bold">Finalizar Compra</h1>
+            <p className="text-emerald-100 mt-2">
+              {user ? `¡Hola ${user.nombre}! ` : ''}Completa tus datos para acceder al curso
+            </p>
+          </div>
         </div>
       </div>
 
@@ -138,7 +226,8 @@ function CheckoutPage() {
                     />
                     <span>💳 Transferencia Bancaria (CBU)</span>
                   </label>
-                  <label className="flex items-center">
+                  {/* Mercado Pago temporalmente deshabilitado por temas de permisos */}
+                  {/* <label className="flex items-center">
                     <input
                       type="radio"
                       name="metodoPago"
@@ -148,7 +237,7 @@ function CheckoutPage() {
                       className="mr-3"
                     />
                     <span>💰 Mercado Pago</span>
-                  </label>
+                  </label> */}
                 </div>
               </div>
 
@@ -156,7 +245,7 @@ function CheckoutPage() {
                 type="submit"
                 className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 mt-6"
               >
-                Procesar Pago - ${precio} ARS
+                Procesar Pago - ${precio} {formData.pais === 'Argentina' ? 'ARS' : 'USD'}
               </button>
             </form>
           </div>
@@ -182,7 +271,7 @@ function CheckoutPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Precio:</span>
-                  <span className="font-semibold">${precio} ARS</span>
+                  <span className="font-semibold">${precio} {formData.pais === 'Argentina' ? 'ARS' : 'USD'}</span>
                 </div>
               </div>
 
@@ -200,10 +289,21 @@ function CheckoutPage() {
               {formData.metodoPago === 'cbu' && (
                 <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                   <h4 className="font-semibold text-blue-800 mb-2">Datos para transferencia:</h4>
-                  <div className="text-sm text-blue-700">
+                  <div className="text-sm text-blue-700 space-y-1">
                     <p><strong>CBU:</strong> 0123456789012345678901</p>
                     <p><strong>Alias:</strong> CURSO.HONGOS</p>
                     <p><strong>Titular:</strong> Maximiliano Zeller</p>
+                    <p className="mt-3 pt-2 border-t border-blue-200">
+                      <strong>Enviar comprobante, nombre y apellido a:</strong>
+                    </p>
+                    <p>
+                      <a 
+                        href="mailto:espaciothaumazein@gmail.com" 
+                        className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                      >
+                       espaciothaumazein@gmail.com
+                      </a>
+                    </p>
                   </div>
                 </div>
               )}
@@ -211,6 +311,7 @@ function CheckoutPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }
