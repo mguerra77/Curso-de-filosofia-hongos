@@ -90,7 +90,11 @@ function CheckoutPage() {
     
     // Solo CBU por ahora - Mercado Pago temporalmente deshabilitado
     console.log('Datos del formulario:', formData)
-    alert(`¡Datos registrados!\n\n📋 PASOS A SEGUIR:\n1. Transferir $${precio} ${formData.pais === 'Argentina' ? 'ARS' : 'USD'} a:\n   • CBU: 0123456789012345678901\n   • Alias: CURSO.HONGOS\n   • Titular: Maximiliano Zeller\n\n2. Enviar comprobante de pago a:\n   📧 espaciothaumazein@gmail.com\n   ✏️ Incluir: ${formData.nombre} ${formData.apellido}\n\n¡Te activaremos el acceso en menos de 24 horas!`)
+    alert(`¡Datos registrados!\n\n📋 PASOS A SEGUIR:\n1. Transferir $${precio} 
+      ${formData.pais === 'Argentina' ? 'ARS' : 'USD'} a:\n   
+      • Alias: ESPACIO.THAUMAZEIN\n   • Titular: Maximiliano Zeller\n\n2. 
+      Enviar comprobante de pago a:\n   📧 espaciothaumazein@gmail.com\n   
+      ✏️ Incluir: ${formData.nombre} ${formData.apellido}\n\n¡Te activaremos el acceso en menos de 24 horas!`)
   }
 
   const precio = formData.pais === 'Argentina' ? '50000' : '50'
@@ -290,8 +294,8 @@ function CheckoutPage() {
                 <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                   <h4 className="font-semibold text-blue-800 mb-2">Datos para transferencia:</h4>
                   <div className="text-sm text-blue-700 space-y-1">
-                    <p><strong>CBU:</strong> 0123456789012345678901</p>
-                    <p><strong>Alias:</strong> CURSO.HONGOS</p>
+                    {/* <p><strong>CBU:</strong> 0123456789012345678901</p> */}
+                    <p><strong>Alias:</strong> ESPACIO.THAUMAZEIN</p>
                     <p><strong>Titular:</strong> Maximiliano Zeller</p>
                     <p className="mt-3 pt-2 border-t border-blue-200">
                       <strong>Enviar comprobante, nombre y apellido a:</strong>
