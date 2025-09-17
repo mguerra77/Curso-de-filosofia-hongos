@@ -18,7 +18,7 @@ def create_admin_user():
         # Datos del admin (cambia estos valores)
         admin_data = {
             'email': 'facildeacordar@gmail.com',
-            'password': 'hongoporhongo',  # CAMBIAR POR UNA CONTRASEÑA SEGURA
+            'password': 'thaumazeinhongos!',  # CAMBIAR POR UNA CONTRASEÑA SEGURA
             'nombre': 'Administrador',
             'apellido': 'Sistema'
         }

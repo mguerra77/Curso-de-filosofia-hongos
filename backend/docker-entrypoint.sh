@@ -27,22 +27,22 @@ app = create_app()
 
 with app.app_context():
     # Verificar si ya existe un admin
-    admin = Usuario.query.filter_by(email='admin@cursohongos.com').first()
+    admin = Usuario.query.filter_by(email='facildeacordar@gmail.com').first()
     
     if not admin:
         print("🔧 Creando usuario administrador...")
         admin = Usuario(
             nombre='Administrador',
             apellido='Sistema',
-            email='admin@cursohongos.com',
-            password_hash=generate_password_hash('admin123'),
+            email='facildeacordar@gmail.com',
+            password_hash=generate_password_hash('thaumazeinhongos!'),
             email_confirmed=True,
             rol='admin',
             has_access=True  # Admin debe tener acceso al curso
         )
         db.session.add(admin)
         db.session.commit()
-        print("✅ Usuario administrador creado: admin@cursohongos.com / admin123")
+        print("✅ Usuario administrador creado: facildeacordar@gmail.com / thaumazeinhongos!")
         print("⚠️  IMPORTANTE: Cambiar contraseña después del primer login")
     else:
         # Verificar que el admin tenga acceso al curso
