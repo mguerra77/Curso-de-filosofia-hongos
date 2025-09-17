@@ -12,6 +12,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage'
 import PaymentSuccess from './pages/PaymentSuccess'
 import PaymentFailure from './pages/PaymentFailure'
 import PaymentPending from './pages/PaymentPending'
+import DebugPage from './pages/DebugPage'
 import './App.css'
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-failure" element={<PaymentFailure />} />
           <Route path="/payment-pending" element={<PaymentPending />} />
+          <Route path="/debug" element={<DebugPage />} />
         </Routes>
       </Router>
     </AuthProvider>

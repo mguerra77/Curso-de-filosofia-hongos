@@ -15,75 +15,93 @@ function CoursePage() {
 
   // Obtener contenido del curso desde la API
   const fetchCourseContent = async () => {
-    try {
-      const token = localStorage.getItem('authToken')
-      const response = await fetch('http://localhost:5000/api/course/content', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      
-      if (response.ok) {
-        const data = await response.json()
-        setVideos(data.videos)
-      } else {
-        // Si falla, usar datos por defecto
-        setVideos([
-          {
-            id: 1,
-            title: "Introducción a la Filosofía de los Hongos",
-            description: "En esta primera clase exploraremos los fundamentos filosóficos que sustentan nuestra aproximación al reino fungi y su relación con la consciencia humana.",
-            duration: "25:30",
-            views: 1247,
-            date: "Enero 2025",
-            module: "Módulo 1",
-            reading_material: "Documentos y artículos complementarios para profundizar en el tema."
-          },
-          {
-            id: 2,
-            title: "Historia del Uso Ritual de los Psicodélicos",
-            description: "Un recorrido histórico por las diferentes culturas que han incorporado los hongos psicodélicos en sus prácticas espirituales y rituales.",
-            duration: "32:15",
-            views: 1156,
-            date: "Enero 2025",
-            module: "Módulo 1",
-            reading_material: "Material complementario sobre historia de los psicodélicos."
-          },
-          {
-            id: 3,
-            title: "Neurociencia y Consciencia Alterada",
-            description: "Análisis de los mecanismos neurológicos involucrados en las experiencias psicodélicas y su impacto en la percepción de la realidad.",
-            duration: "28:45",
-            views: 1089,
-            date: "Enero 2025",
-            module: "Módulo 2",
-            reading_material: "Estudios científicos sobre neurociencia y psicodélicos."
-          },
-          {
-            id: 4,
-            title: "Ética y Responsabilidad en el Uso de Psicodélicos",
-            description: "Discusión sobre las consideraciones éticas fundamentales para el uso responsable de sustancias psicodélicos en contextos terapéuticos y personales.",
-            duration: "30:20",
-            views: 967,
-            date: "Febrero 2025",
-            module: "Módulo 2",
-            reading_material: "Guías éticas para el uso responsable."
-          },
-          {
-            id: 5,
-            title: "El Futuro de la Terapia Psicodélica",
-            description: "Perspectivas futuras sobre el desarrollo de la terapia asistida con psicodélicos y su integración en el sistema de salud mental.",
-            duration: "35:10",
-            views: 832,
-            date: "Febrero 2025",
-            module: "Módulo 3",
-            reading_material: "Investigaciones sobre el futuro de la terapia psicodélica."
-          }
-        ])
+    // Videos del curso con enlaces reales de Google Drive
+    setVideos([
+      {
+        id: 1,
+        title: "Unidad 1: Hongos Filosofía y Biología Parte 1",
+        description: "Primera parte de la introducción fundamental al mundo de los hongos desde una perspectiva filosófica y biológica.",
+        duration: "45:30",
+        views: 1247,
+        date: "Septiembre 2025",
+        module: "Unidad 1: Fundamentos",
+        video_type: "drive",
+        drive_file_id: "13pzuEBYsO1zYuZSncZdkE2wwwLRjbhtU",
+        reading_material: "Material complementario sobre filosofía y biología de los hongos."
+      },
+      {
+        id: 2,
+        title: "Unidad 1: Hongos Filosofía y Biología Parte 2",
+        description: "Continuación de los fundamentos filosóficos y biológicos del reino fungi y su impacto en la consciencia.",
+        duration: "48:15",
+        views: 1156,
+        date: "Septiembre 2025",
+        module: "Unidad 1: Fundamentos",
+        video_type: "drive",
+        drive_file_id: "1FV9j1ibKz-WYIiqKJBv94ieFvBkRby3P",
+        reading_material: "Documentos complementarios sobre filosofía fúngica."
+      },
+      {
+        id: 3,
+        title: "Unidad 2: Conocimiento y mente fúngica Parte 1",
+        description: "Exploración de los mecanismos de conocimiento y la naturaleza de la mente fúngica en el contexto de la consciencia.",
+        duration: "52:22",
+        views: 1089,
+        date: "Septiembre 2025",
+        module: "Unidad 2: Consciencia",
+        video_type: "drive",
+        drive_file_id: "1OiJy9xULiIXmLoqyzegLNppLrgDuo6S1",
+        reading_material: "Estudios sobre la mente fúngica y procesos de conocimiento."
+      },
+      {
+        id: 4,
+        title: "Unidad 2: Conocimiento y mente fúngica parte 2",
+        description: "Segunda parte del análisis profundo sobre los procesos cognitivos y la inteligencia en el reino fungi.",
+        duration: "47:18",
+        views: 967,
+        date: "Septiembre 2025",
+        module: "Unidad 2: Consciencia",
+        video_type: "drive",
+        drive_file_id: "1vC4f8_PR8MXWBy4u8992DlUxcMXIEir-",
+        reading_material: "Investigaciones sobre cognición fúngica."
+      },
+      {
+        id: 5,
+        title: "Unidad 3: Hacia una nueva salud Parte 1",
+        description: "Primera parte de la exploración de nuevos paradigmas de salud y bienestar a través de la perspectiva fúngica.",
+        duration: "44:45",
+        views: 832,
+        date: "Septiembre 2025",
+        module: "Unidad 3: Salud",
+        video_type: "drive",
+        drive_file_id: "11DZhgzy1ssaOEbMGEE3RtXXo8GwUrXhP",
+        reading_material: "Materiales sobre nuevos enfoques de salud integral."
+      },
+      {
+        id: 6,
+        title: "Unidad 3: Hacia una nueva salud Parte 2",
+        description: "Continuación del análisis sobre los aportes de los hongos a la medicina y el bienestar holístico.",
+        duration: "49:12",
+        views: 756,
+        date: "Septiembre 2025",
+        module: "Unidad 3: Salud",
+        video_type: "drive",
+        drive_file_id: "1yw0xYeXaclH6MqoT0aVPdN9D3hgCM3MR",
+        reading_material: "Documentos sobre medicina integrativa y hongos."
+      },
+      {
+        id: 7,
+        title: "Unidad 4: Lo sagrado y la conciencia",
+        description: "Exploración profunda de la dimensión sagrada y espiritual de la experiencia con hongos y su relación con la consciencia expandida.",
+        duration: "56:33",
+        views: 689,
+        date: "Septiembre 2025",
+        module: "Unidad 4: Espiritualidad",
+        video_type: "drive",
+        drive_file_id: "186y9qniFgG3vKyq7_nOfFmhEa5HV5IQD",
+        reading_material: "Textos sobre espiritualidad y estados expandidos de consciencia."
       }
-    } catch (error) {
-      console.error('Error fetching course content:', error)
-    }
+    ])
   }
 
   // Verificar acceso al curso y cargar contenido
@@ -112,7 +130,7 @@ function CoursePage() {
     }
 
     verifyAccess()
-  }, [isAuthenticated, navigate, checkCourseAccess])
+  }, [isAuthenticated, navigate]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleLogout = () => {
     logout()
@@ -146,13 +164,41 @@ function CoursePage() {
 
   const isAdmin = user?.rol === 'admin'
 
-  // Mostrar loading mientras se verifica el acceso o carga el contenido
-  if (loading || videos.length === 0) {
+  // Mostrar loading mientras se verifica el acceso
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin text-4xl mb-4">⏳</div>
           <p className="text-gray-600">Verificando acceso al curso...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Si no hay videos, mostrar contenido del curso con mensaje
+  if (videos.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="bg-white shadow-lg">
+          <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-gray-800">Curso de Filosofía de los Hongos</h1>
+            <button 
+              onClick={handleLogout}
+              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Cerrar Sesión
+            </button>
+          </div>
+        </div>
+        
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center">
+            <div className="text-6xl mb-4">🍄</div>
+            <h2 className="text-2xl font-bold text-gray-700 mb-2">Contenido en Preparación</h2>
+            <p className="text-gray-600">Los videos del curso se están preparando.</p>
+            <p className="text-gray-500 text-sm mt-2">Pronto estará disponible todo el contenido.</p>
+          </div>
         </div>
       </div>
     )
@@ -403,8 +449,9 @@ function CoursePage() {
 
 // Componente modal para editar videos
 const VideoEditModal = ({ video, onSave, onCancel }) => {
-  const [videoSource, setVideoSource] = useState('url') // 'url' o 'file'
+  const [videoSource, setVideoSource] = useState('url') // 'url', 'drive' o 'file'
   const [videoUrl, setVideoUrl] = useState(video.video_url || '')
+  const [driveFileId, setDriveFileId] = useState(video.drive_file_id || '')
   const [selectedFile, setSelectedFile] = useState(null)
   const [title, setTitle] = useState(video.title || '')
   const [description, setDescription] = useState(video.description || '')
@@ -417,6 +464,8 @@ const VideoEditModal = ({ video, onSave, onCancel }) => {
 
     try {
       let finalVideoUrl = videoUrl
+      let videoType = 'youtube'
+      let finalDriveFileId = null
 
       // Si se seleccionó un archivo, subirlo primero
       if (videoSource === 'file' && selectedFile) {
@@ -438,13 +487,20 @@ const VideoEditModal = ({ video, onSave, onCancel }) => {
 
         const result = await response.json()
         finalVideoUrl = result.video_url
+        videoType = 'file'
+      } else if (videoSource === 'drive') {
+        videoType = 'drive'
+        finalDriveFileId = driveFileId
+        finalVideoUrl = null // Para Google Drive no usamos video_url
       }
 
       await onSave({
         title,
         description,
         duration,
-        video_url: finalVideoUrl
+        video_url: finalVideoUrl,
+        video_type: videoType,
+        drive_file_id: finalDriveFileId
       })
     } catch (error) {
       alert(error.message || 'Error al guardar el video')
@@ -484,28 +540,39 @@ const VideoEditModal = ({ video, onSave, onCancel }) => {
           {/* Selector de tipo de video */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Tipo de Video</label>
-            <div className="flex space-x-4 mb-4">
+            <div className="flex space-x-2 mb-4">
               <button
                 type="button"
                 onClick={() => setVideoSource('url')}
-                className={`flex-1 py-2 px-4 rounded-lg border ${
+                className={`flex-1 py-2 px-3 rounded-lg border text-sm ${
                   videoSource === 'url' 
                     ? 'bg-emerald-500 text-white border-emerald-500' 
                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                📺 URL de YouTube
+                📺 YouTube
+              </button>
+              <button
+                type="button"
+                onClick={() => setVideoSource('drive')}
+                className={`flex-1 py-2 px-3 rounded-lg border text-sm ${
+                  videoSource === 'drive' 
+                    ? 'bg-emerald-500 text-white border-emerald-500' 
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                ☁️ Google Drive
               </button>
               <button
                 type="button"
                 onClick={() => setVideoSource('file')}
-                className={`flex-1 py-2 px-4 rounded-lg border ${
+                className={`flex-1 py-2 px-3 rounded-lg border text-sm ${
                   videoSource === 'file' 
                     ? 'bg-emerald-500 text-white border-emerald-500' 
                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                📁 Subir Archivo
+                📁 Archivo
               </button>
             </div>
           </div>
@@ -521,6 +588,23 @@ const VideoEditModal = ({ video, onSave, onCancel }) => {
                 placeholder="https://youtube.com/watch?v=..."
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
+            </div>
+          )}
+
+          {/* Input para Google Drive */}
+          {videoSource === 'drive' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Google Drive File ID</label>
+              <input
+                type="text"
+                value={driveFileId}
+                onChange={(e) => setDriveFileId(e.target.value)}
+                placeholder="1Ab2Cd3Ef4Gh5Ij6Kl7Mn8Op9Qr0St1Uv2Wx3Yz"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Copia el ID del enlace de Google Drive: drive.google.com/file/d/[ID]/view
+              </p>
             </div>
           )}
 

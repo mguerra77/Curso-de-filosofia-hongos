@@ -21,6 +21,10 @@ dist-ssr
 backend/.env
 frontend/.env
 
+# Docker volumes y datos
+docker-compose.override.yml
+.docker/
+
 # Python
 __pycache__/
 *.py[cod]

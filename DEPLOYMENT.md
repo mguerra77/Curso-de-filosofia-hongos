@@ -1,12 +1,162 @@
 # 🚀 Guía de Despliegue - Curso de Filosofía de los Hongos
 
-## 📋 Requisitos del Servidor
+## � Despliegue con Docker (RECOMENDADO)
 
+### �📋 Requisitos del Servidor
+- **Docker:** 20.10+
+- **Docker Compose:** 2.0+
+- **RAM:** 2-4 GB mínimo
+- **Storage:** 10-20 GB (sin videos, con Drive)
+
+### 🚀 Instalación Ultra-Rápida
+
+```bash
+# 1. Clonar repositorio
+git clone [URL-DEL-REPOSITORIO]
+cd curso-hongos
+
+# 2. Configurar variables de entorno
+cp .env.docker .env
+nano .env  # Editar con valores reales
+
+# 3. Levantar toda la aplicación
+docker-compose up -d
+
+# 4. Verificar que todo funcione
+docker-compose logs -f
+```
+
+### 🔧 Configuración de Variables (.env)
+
+**⚠️ OBLIGATORIO: Editar estos valores en .env**
+
+```bash
+# Base de datos (cambiar password)
+DB_PASSWORD=tu_password_super_seguro
+
+# Seguridad (generar claves únicas)
+SECRET_KEY=clave-secreta-de-32-caracteres-minimo
+JWT_SECRET_KEY=otra-clave-jwt-diferente-y-segura
+
+# Email (CRÍTICO para funcionamiento)
+MAIL_USERNAME=espaciothaumazein@gmail.com
+MAIL_PASSWORD=[SOLICITAR A MARTIN]
+MAIL_DEFAULT_SENDER=espaciothaumazein@gmail.com
+
+# Mercado Pago (opcional)
+MP_ACCESS_TOKEN=tu_access_token
+MP_PUBLIC_KEY=tu_public_key
+
+# URLs de producción
+MP_SUCCESS_URL=https://tu-dominio.com/payment-success
+MP_FAILURE_URL=https://tu-dominio.com/payment-failure
+MP_PENDING_URL=https://tu-dominio.com/payment-pending
+```
+
+### 🎯 Verificación del Despliegue
+
+```bash
+# Ver estado de contenedores
+docker-compose ps
+
+# Ver logs en tiempo real
+docker-compose logs -f
+
+# Acceder a la aplicación
+curl http://localhost        # Frontend
+curl http://localhost/api/health  # Backend API
+```
+
+### 🔑 Acceso Inicial
+
+**Usuario Administrador (creado automáticamente):**
+- **URL:** http://tu-dominio.com/admin
+- **Email:** admin@cursohongos.com
+- **Contraseña:** admin123
+
+**⚠️ CAMBIAR CONTRASEÑA inmediatamente después del primer login**
+
+### 📊 Comandos Útiles
+
+```bash
+# Reiniciar aplicación
+docker-compose restart
+
+# Ver logs de un servicio específico
+docker-compose logs backend
+docker-compose logs frontend
+docker-compose logs db
+
+# Backup de base de datos
+docker-compose exec db pg_dump -U curso_user curso_hongos > backup_$(date +%Y%m%d).sql
+
+# Restaurar backup
+docker-compose exec -T db psql -U curso_user curso_hongos < backup_20250101.sql
+
+# Acceder al contenedor backend
+docker-compose exec backend bash
+
+# Parar todo
+docker-compose down
+
+# Parar y eliminar volúmenes (CUIDADO: borra datos)
+docker-compose down -v
+```
+
+### 🌐 Configuración de Dominio
+
+Si tienes un dominio, edita el `docker-compose.yml`:
+
+```yaml
+frontend:
+  ports:
+    - "80:80"
+    - "443:443"  # Para HTTPS
+```
+
+---
+
+## 📦 Despliegue Manual (Alternativo)
+
+<details>
+<summary>Click para ver instrucciones manuales</summary>
+
+### 📋 Requisitos del Servidor
 - **Sistema:** Ubuntu/Debian 20.04+
 - **Python:** 3.8+
 - **Node.js:** 18+
 - **PostgreSQL:** 12+
-- **Nginx:** (recomendado para producción)
+
+[... resto de instrucciones manuales ...]
+
+</details>
+
+---
+
+## 🆘 Soporte
+
+**Desarrollador:** Martín Guerra
+**Email:** martinge777@gmail.com
+
+### 🐛 Problemas Comunes
+
+**Error de conexión a base de datos:**
+```bash
+docker-compose logs db
+# Verificar que PostgreSQL esté corriendo
+```
+
+**Error de permisos:**
+```bash
+sudo chown -R $USER:$USER .
+```
+
+**Error de puertos ocupados:**
+```bash
+# Cambiar puertos en docker-compose.yml
+ports:
+  - "8080:80"  # En lugar de 80:80
+```
 
 ## 🔧 Instalación Paso a Paso
 

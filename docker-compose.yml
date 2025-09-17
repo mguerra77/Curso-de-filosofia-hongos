@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: curso_hongos_db
+    environment:
+      POSTGRES_DB: curso_hongos
+      POSTGRES_USER: curso_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change_me_in_production}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U curso_user -d curso_hongos"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend Flask
+  backend:
+    build: ./backend
+    container_name: curso_hongos_backend
+    environment:
+      - DATABASE_URL=postgresql://curso_user:${DB_PASSWORD:-change_me_in_production}@db:5432/curso_hongos
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-in-production}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-jwt-secret-change-in-production}
+      - FLASK_ENV=production
+      - MAIL_SERVER=smtp.gmail.com
+      - MAIL_PORT=587
+      - MAIL_USE_TLS=True
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_DEFAULT_SENDER=${MAIL_DEFAULT_SENDER}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost}
+      - MP_ACCESS_TOKEN=${MP_ACCESS_TOKEN}
+      - MP_PUBLIC_KEY=${MP_PUBLIC_KEY}
+      - MP_SUCCESS_URL=${MP_SUCCESS_URL:-http://localhost/payment-success}
+      - MP_FAILURE_URL=${MP_FAILURE_URL:-http://localhost/payment-failure}
+      - MP_PENDING_URL=${MP_PENDING_URL:-http://localhost/payment-pending}
+    volumes:
+      - uploads_data:/app/uploads
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Frontend React + Nginx
+  frontend:
+    build: ./frontend
+    container_name: curso_hongos_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+    driver: local
+  uploads_data:
+    driver: local
+
+networks:
+  default:
+    name: curso_hongos_network

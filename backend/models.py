@@ -61,7 +61,9 @@ class CourseContent(db.Model):
     description = db.Column(db.Text)
     duration = db.Column(db.String(10))  # "25:30"
     module = db.Column(db.String(50))    # "Módulo 1"
-    video_url = db.Column(db.String(500))  # URL del video
+    video_url = db.Column(db.String(500))  # URL del video (YouTube, Google Drive, o archivo local)
+    video_type = db.Column(db.String(20), default='youtube')  # 'youtube', 'drive', 'local'
+    drive_file_id = db.Column(db.String(100))  # ID del archivo en Google Drive
     reading_material = db.Column(db.Text)  # Material de lectura
     fecha_actualizacion = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
@@ -73,6 +75,8 @@ class CourseContent(db.Model):
             'duration': self.duration,
             'module': self.module,
             'video_url': self.video_url,
+            'video_type': self.video_type,
+            'drive_file_id': self.drive_file_id,
             'reading_material': self.reading_material,
             'views': 1247 - (self.video_id * 80),  # Mock views
             'date': "Enero 2025" if self.video_id <= 2 else "Febrero 2025"

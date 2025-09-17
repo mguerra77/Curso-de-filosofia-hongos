@@ -15,6 +15,12 @@ function VideoPlayer({ video, onNext, onPrevious, hasNext, hasPrevious }) {
     return match ? match[1] : null
   }
 
+  // Función para obtener Google Drive embed URL
+  const getGoogleDriveEmbedUrl = (fileId) => {
+    if (!fileId) return null
+    return `https://drive.google.com/file/d/${fileId}/preview`
+  }
+
   // Función para verificar si es un archivo MP4
   const isMP4File = (url) => {
     if (!url) return false
@@ -22,14 +28,17 @@ function VideoPlayer({ video, onNext, onPrevious, hasNext, hasPrevious }) {
   }
 
   const videoUrl = video?.video_url
+  const videoType = video?.video_type || 'youtube'
+  const driveFileId = video?.drive_file_id
   const youtubeId = getYouTubeVideoId(videoUrl)
   const isMP4 = isMP4File(videoUrl)
+  const driveEmbedUrl = getGoogleDriveEmbedUrl(driveFileId)
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
       {/* Video Container */}
       <div className="relative bg-gray-900 aspect-video">
-        {youtubeId ? (
+        {videoType === 'youtube' && youtubeId ? (
           // YouTube video
           <iframe
             src={`https://www.youtube.com/embed/${youtubeId}`}
@@ -39,8 +48,18 @@ function VideoPlayer({ video, onNext, onPrevious, hasNext, hasPrevious }) {
             allowFullScreen
             className="w-full h-full"
           ></iframe>
-        ) : isMP4 && videoUrl ? (
-          // MP4 video
+        ) : videoType === 'drive' && driveEmbedUrl ? (
+          // Google Drive video
+          <iframe
+            src={driveEmbedUrl}
+            title={video.title}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="w-full h-full"
+          ></iframe>
+        ) : videoType === 'local' && isMP4 && videoUrl ? (
+          // MP4 video local
           <video
             controls
             className="w-full h-full"
@@ -64,12 +83,15 @@ function VideoPlayer({ video, onNext, onPrevious, hasNext, hasPrevious }) {
               <p className="text-gray-400 text-sm mt-2">
                 El administrador puede agregar un video desde el botón de edición
               </p>
+              <p className="text-gray-400 text-xs mt-1">
+                Soporta: YouTube, Google Drive y archivos MP4
+              </p>
             </div>
           </div>
         )}
         
         {/* Progress bar placeholder - solo si no hay video real */}
-        {!youtubeId && !isMP4 && (
+        {(!youtubeId && !driveEmbedUrl && !isMP4) && (
           <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-4">
             <div className="w-full bg-gray-600 rounded-full h-1">
               <div className="bg-emerald-500 h-1 rounded-full" style={{ width: '30%' }}></div>
@@ -83,11 +105,6 @@ function VideoPlayer({ video, onNext, onPrevious, hasNext, hasPrevious }) {
         <div className="flex items-start justify-between mb-4">
           <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">{video.title}</h2>
-            <div className="flex items-center text-sm text-gray-500 space-x-4">
-              <span>📹 {video.duration}</span>
-              <span>👁️ {video.views} visualizaciones</span>
-              <span>📅 {video.date}</span>
-            </div>
           </div>
           <div className="flex items-center space-x-2">
             <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm font-medium">

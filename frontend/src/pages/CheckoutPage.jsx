@@ -88,13 +88,8 @@ function CheckoutPage() {
   const handleSubmit = (e) => {
     e.preventDefault()
     
-    // Solo CBU por ahora - Mercado Pago temporalmente deshabilitado
-    console.log('Datos del formulario:', formData)
-    alert(`¡Datos registrados!\n\n📋 PASOS A SEGUIR:\n1. Transferir $${precio} 
-      ${formData.pais === 'Argentina' ? 'ARS' : 'USD'} a:\n   
-      • Alias: ESPACIO.THAUMAZEIN\n   • Titular: Maximiliano Zeller\n\n2. 
-      Enviar comprobante de pago a:\n   📧 espaciothaumazein@gmail.com\n   
-      ✏️ Incluir: ${formData.nombre} ${formData.apellido}\n\n¡Te activaremos el acceso en menos de 24 horas!`)
+    // Redirigir directamente al formulario de Google Forms
+    window.open('https://forms.gle/P2rnqHNY5K3niWCj8', '_blank')
   }
 
   const precio = formData.pais === 'Argentina' ? '50000' : '50'
@@ -249,7 +244,7 @@ function CheckoutPage() {
                 type="submit"
                 className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 mt-6"
               >
-                Procesar Pago - ${precio} {formData.pais === 'Argentina' ? 'ARS' : 'USD'}
+                Completar Inscripción - ${precio} {formData.pais === 'Argentina' ? 'ARS' : 'USD'}
               </button>
             </form>
           </div>
@@ -292,22 +287,28 @@ function CheckoutPage() {
 
               {formData.metodoPago === 'cbu' && (
                 <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                  <h4 className="font-semibold text-blue-800 mb-2">Datos para transferencia:</h4>
-                  <div className="text-sm text-blue-700 space-y-1">
-                    {/* <p><strong>CBU:</strong> 0123456789012345678901</p> */}
-                    <p><strong>Alias:</strong> ESPACIO.THAUMAZEIN</p>
-                    <p><strong>Titular:</strong> Maximiliano Zeller</p>
-                    <p className="mt-3 pt-2 border-t border-blue-200">
-                      <strong>Enviar comprobante, nombre y apellido a:</strong>
-                    </p>
-                    <p>
+                  <h4 className="font-semibold text-blue-800 mb-2">📋 Pasos para completar tu inscripción:</h4>
+                  <div className="text-sm text-blue-700 space-y-2">
+                    <div className="bg-white p-3 rounded border border-blue-200">
+                      <p className="font-semibold mb-1">1. Realiza la transferencia:</p>
+                      <p><strong>Alias:</strong> ESPACIO.THAUMAZEIN</p>
+                      <p><strong>Titular:</strong> Maximiliano Zeller</p>
+                      <p><strong>Monto:</strong> ${precio} {formData.pais === 'Argentina' ? 'ARS' : 'USD'}</p>
+                    </div>
+                    <div className="bg-white p-3 rounded border border-blue-200">
+                      <p className="font-semibold mb-1">2. Completa el formulario de inscripción:</p>
+                      <p className="text-xs text-blue-600 mb-2">
+                        Al hacer clic en "Completar Inscripción" se abrirá el formulario donde debes adjuntar tu comprobante de pago
+                      </p>
                       <a 
-                        href="mailto:espaciothaumazein@gmail.com" 
-                        className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                        href="https://forms.gle/P2rnqHNY5K3niWCj8" 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
                       >
-                       espaciothaumazein@gmail.com
+                        📝 Ir al Formulario de Inscripción
                       </a>
-                    </p>
+                    </div>
                   </div>
                 </div>
               )}

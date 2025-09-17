@@ -8,6 +8,15 @@ from config import Config
 
 auth_bp = Blueprint('auth', __name__)
 
+@auth_bp.route('/health', methods=['GET'])
+def health():
+    """Endpoint de health check"""
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': datetime.utcnow().isoformat(),
+        'service': 'auth'
+    }), 200
+
 def get_current_user():
     """Función helper para obtener el usuario actual desde el token JWT"""
     auth_header = request.headers.get('Authorization')

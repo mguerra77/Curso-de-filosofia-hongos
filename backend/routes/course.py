@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 import jwt
 import os
 import uuid
+import re
 from datetime import datetime
 from config import Config
 
@@ -15,6 +16,59 @@ ALLOWED_VIDEO_EXTENSIONS = {'mp4', 'avi', 'mov', 'wmv', 'flv', 'webm', 'mkv'}
 def allowed_video_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_VIDEO_EXTENSIONS
+
+def extract_google_drive_id(url):
+    """
+    Extrae el ID de archivo de una URL de Google Drive
+    Soporta varios formatos de URL de Google Drive
+    """
+    if not url:
+        return None
+    
+    # Patrones comunes de URLs de Google Drive
+    patterns = [
+        r'/file/d/([a-zA-Z0-9-_]+)',  # https://drive.google.com/file/d/FILE_ID/view
+        r'id=([a-zA-Z0-9-_]+)',       # https://drive.google.com/open?id=FILE_ID
+        r'/drive/folders/([a-zA-Z0-9-_]+)',  # Para carpetas (no videos, pero por si acaso)
+    ]
+    
+    for pattern in patterns:
+        match = re.search(pattern, url)
+        if match:
+            return match.group(1)
+    
+    # Si la URL ya es solo el ID
+    if re.match(r'^[a-zA-Z0-9-_]+$', url):
+        return url
+    
+    return None
+
+def get_google_drive_embed_url(file_id):
+    """
+    Genera URL de embebido de Google Drive para reproducir video
+    """
+    if not file_id:
+        return None
+    return f"https://drive.google.com/file/d/{file_id}/preview"
+
+def detect_video_type(url):
+    """
+    Detecta el tipo de video basado en la URL
+    Retorna: 'youtube', 'drive', 'local'
+    """
+    if not url:
+        return 'local'
+    
+    url_lower = url.lower()
+    
+    if 'youtube.com' in url_lower or 'youtu.be' in url_lower:
+        return 'youtube'
+    elif 'drive.google.com' in url_lower:
+        return 'drive'
+    elif url.startswith('/uploads/') or url.startswith('http://localhost:5000/uploads/'):
+        return 'local'
+    else:
+        return 'youtube'  # Por defecto, asumir YouTube para URLs externas
 
 def get_current_user():
     """Función helper para obtener el usuario actual desde el token JWT"""
@@ -123,6 +177,16 @@ def actualizar_contenido_curso(video_id):
             content.module = data['module']
         if 'video_url' in data:
             content.video_url = data['video_url']
+            # Detectar tipo de video y extraer ID de Google Drive si es necesario
+            video_type = detect_video_type(data['video_url'])
+            content.video_type = video_type
+            
+            if video_type == 'drive':
+                drive_id = extract_google_drive_id(data['video_url'])
+                content.drive_file_id = drive_id
+            else:
+                content.drive_file_id = None
+                
         if 'reading_material' in data:
             content.reading_material = data['reading_material']
         
@@ -232,5 +296,24 @@ def upload_video_general():
         
         return jsonify({'error': 'Invalid file type'}), 400
         
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@course_bp.route('/debug-auth', methods=['GET'])
+def debug_auth():
+    """Endpoint temporal para debug de autenticación"""
+    try:
+        auth_header = request.headers.get('Authorization')
+        token = None
+        if auth_header and auth_header.startswith('Bearer '):
+            token = auth_header.split(' ')[1]
+        
+        return jsonify({
+            'auth_header': auth_header,
+            'token_present': bool(token),
+            'token_preview': token[:20] + '...' if token else None,
+            'headers': dict(request.headers),
+            'user': get_current_user().to_dict() if get_current_user() else None
+        }), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500

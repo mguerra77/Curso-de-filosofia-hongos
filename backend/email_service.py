@@ -27,9 +27,18 @@ def send_confirmation_email(user_email, user_name, confirmation_token):
         if not current_app:
             print("Error: No hay contexto de aplicación Flask")
             return False
+        
+        # En desarrollo, si no hay configuración real de email, simular envío
+        mail_password = current_app.config.get('MAIL_PASSWORD', '')
+        if not mail_password or mail_password.startswith('your_'):
+            print(f"📧 [MODO DESARROLLO] Email de confirmación simulado para {user_email}")
+            print(f"🔗 Token: {confirmation_token}")
+            print(f"🌐 URL de confirmación: {current_app.config.get('FRONTEND_URL', 'http://localhost')}/confirm-email?token={confirmation_token}")
+            return True
             
-        # URL de confirmación
-        confirmation_url = f"http://localhost:5173/confirm-email?token={confirmation_token}"
+        # URL de confirmación usando la configuración
+        frontend_url = current_app.config.get('FRONTEND_URL', 'http://localhost')
+        confirmation_url = f"{frontend_url}/confirm-email?token={confirmation_token}"
         
         # Crear mensaje
         msg = Message(
@@ -105,9 +114,18 @@ def send_password_reset_email(user_email, user_name, reset_token):
         if not current_app:
             print("Error: No hay contexto de aplicación Flask")
             return False
+        
+        # En desarrollo, si no hay configuración real de email, simular envío
+        mail_password = current_app.config.get('MAIL_PASSWORD', '')
+        if not mail_password or mail_password.startswith('your_'):
+            print(f"📧 [MODO DESARROLLO] Email de reset simulado para {user_email}")
+            print(f"🔗 Token: {reset_token}")
+            print(f"🌐 URL de reset: {current_app.config.get('FRONTEND_URL', 'http://localhost')}/reset-password?token={reset_token}")
+            return True
             
-        # URL de reset
-        reset_url = f"http://localhost:5173/reset-password?token={reset_token}"
+        # URL de reset usando la configuración
+        frontend_url = current_app.config.get('FRONTEND_URL', 'http://localhost')
+        reset_url = f"{frontend_url}/reset-password?token={reset_token}"
         
         # Crear mensaje
         msg = Message(

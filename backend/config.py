@@ -10,7 +10,7 @@ class Config:
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'jwt-secret-key'
     
     # Configuración base de datos
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///data/curso_hongos.db'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://postgres:hongos123@localhost:5433/curso_hongos'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Configuración de uploads
@@ -21,10 +21,13 @@ class Config:
     MP_ACCESS_TOKEN = os.environ.get('MP_ACCESS_TOKEN')
     MP_PUBLIC_KEY = os.environ.get('MP_PUBLIC_KEY')
     
+    # URL base del frontend
+    FRONTEND_URL = os.environ.get('FRONTEND_URL') or 'http://localhost'
+    
     # URLs de retorno para Mercado Pago
-    MP_SUCCESS_URL = os.environ.get('MP_SUCCESS_URL') or 'http://localhost:5173/payment-success'
-    MP_FAILURE_URL = os.environ.get('MP_FAILURE_URL') or 'http://localhost:5173/payment-failure'
-    MP_PENDING_URL = os.environ.get('MP_PENDING_URL') or 'http://localhost:5173/payment-pending'
+    MP_SUCCESS_URL = os.environ.get('MP_SUCCESS_URL') or f'{FRONTEND_URL}/payment-success'
+    MP_FAILURE_URL = os.environ.get('MP_FAILURE_URL') or f'{FRONTEND_URL}/payment-failure'
+    MP_PENDING_URL = os.environ.get('MP_PENDING_URL') or f'{FRONTEND_URL}/payment-pending'
     
     # Configuración de Email
     MAIL_SERVER = os.environ.get('MAIL_SERVER') or 'smtp.gmail.com'

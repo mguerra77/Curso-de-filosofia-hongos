@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { authService } from '../services/api';
 
 const AuthContext = createContext();
@@ -83,15 +83,23 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   };
 
-  const checkCourseAccess = async () => {
+  const checkCourseAccess = useCallback(async () => {
+    console.log('🔍 checkCourseAccess: Iniciando verificación...');
+    console.log('🔍 checkCourseAccess: Token:', localStorage.getItem('authToken') ? 'EXISTS' : 'MISSING');
+    console.log('🔍 checkCourseAccess: User:', user);
+    
     try {
+      console.log('🔍 checkCourseAccess: Llamando a authService.checkCourseAccess()...');
       const data = await authService.checkCourseAccess();
+      console.log('🔍 checkCourseAccess: Respuesta recibida:', data);
+      console.log('🔍 checkCourseAccess: has_access =', data.has_access);
       return data.has_access;
     } catch (error) {
-      console.error('Error verificando acceso al curso:', error);
+      console.error('❌ checkCourseAccess: Error verificando acceso al curso:', error);
+      console.error('❌ checkCourseAccess: Error stack:', error.stack);
       return false;
     }
-  };
+  }, []); // Sin dependencias porque authService es estable
 
   const value = {
     user,
